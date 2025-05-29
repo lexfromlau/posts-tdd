@@ -1,25 +1,28 @@
 package com.lexfromlau.posts;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.Mockito.when;
 
 @WebMvcTest(PostsController.class)
-@AutoConfigureMockMvc
 public class PostsControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
-    List<Post> posts = new ArrayList<>();
+    @MockitoBean
+    private PostRepository postRepository;
+
+    private List<Post> posts;
 
     @BeforeEach
     void setUp() {
@@ -29,7 +32,9 @@ public class PostsControllerTest {
     }
 
     @Test
-    public void shouldFindAllPosts() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/posts")).andExpect(MockMvcResultMatchers.status().isOk());
+    void shouldFindAllPosts() throws Exception {
+        when(postRepository.findAll()).thenReturn(posts);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/posts"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
