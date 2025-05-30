@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS Post (
     body TEXT NOT NULL,
     version int,
     PRIMARY KEY (id)
-)
+);
